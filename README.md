@@ -1,12 +1,8 @@
 # nastavnik_dz_YetAnotherGoida
-Домашнее задание по дисциплине семинар наставника 
-**Выполнил - Третьяков Александр Юрьевич**
 
 ### Решение
 
 Установим из `docker-compose.yaml` файла необходимые сервисы
-
-<img src="./assets/2026-03-03 170104.jpg" width="700"> 
 
 Подготовим HDFS:
 
@@ -22,7 +18,6 @@ docker exec namenode hdfs dfs -chmod 777 /tmp/sandbox_zeppelin
 ```powershell
 docker exec namenode hdfs dfs -ls /tmp/sandbox_zeppelin
 ```
-<img src="./assets/2026-03-03 170437.jpg" width="700"> 
 
 Откроем UI Zeppelin http://localhost:8082
 
