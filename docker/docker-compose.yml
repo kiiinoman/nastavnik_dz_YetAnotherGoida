@@ -1,0 +1,56 @@
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    environment:
+      - CLUSTER_NAME=test-cluster
+    ports:
+      - "9870:9870"   # Web UI
+      - "9000:9000"   # RPC
+    volumes:
+      - namenode-data:/hadoop/dfs/name
+    networks:
+      - hadoop-net
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    ports:
+      - "9864:9864"   # Web UI
+    volumes:
+      - datanode-data:/hadoop/dfs/data
+    networks:
+      - hadoop-net
+    depends_on:
+      - namenode
+
+  zeppelin:
+    image: apache/zeppelin:0.10.1
+    container_name: zeppelin
+    ports:
+      - "8082:8080"   # Zeppelin UI
+    environment:
+      - ZEPPELIN_ADDR=0.0.0.0
+      - SPARK_HOME=/opt/spark
+      # Указываем HDFS по умолчанию для Spark  
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    volumes:
+      # монтируем notebooks
+      - ../notebooks:/zeppelin/notebook  
+      # монтируем локальный Spark
+      - "C:/Documents/Edu/MW/Spark/spark-3.1.2-bin-hadoop3.2:/opt/spark"
+    networks:
+      - hadoop-net
+    depends_on:
+      - namenode
+      - datanode
+
+volumes:
+  namenode-data:
+  datanode-data:
+
+networks:
+  hadoop-net:
+    driver: bridge
